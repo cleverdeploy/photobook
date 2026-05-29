@@ -6,9 +6,12 @@ own photos — no account needed.
 """
 from __future__ import annotations
 
+import re
 import secrets
 import uuid
 from typing import Optional
+
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
@@ -84,9 +87,17 @@ def logout(request: Request):
 # --- owner dashboard -------------------------------------------------------
 
 @app.get("/", response_class=HTMLResponse)
-def dashboard(request: Request):
+def home(request: Request):
+    # Non-owners never see albums — they get the public waitlist landing page.
     if not is_owner(request):
-        return RedirectResponse("/login", status_code=303)
+        return templates.TemplateResponse(
+            request,
+            "landing.html",
+            {
+                "joined": request.query_params.get("joined") == "1",
+                "error": request.query_params.get("error") == "1",
+            },
+        )
     albums = db.list_albums()
     rows = []
     for a in albums:
@@ -99,8 +110,23 @@ def dashboard(request: Request):
             }
         )
     return templates.TemplateResponse(
-        request, "dashboard.html", {"albums": rows}
+        request,
+        "dashboard.html",
+        {
+            "albums": rows,
+            "waitlist": db.list_waitlist(),
+            "waitlist_count": db.count_waitlist(),
+        },
     )
+
+
+@app.post("/waitlist")
+def join_waitlist(request: Request, email: str = Form(default="")):
+    email = email.strip().lower()
+    if not EMAIL_RE.match(email) or len(email) > 254:
+        return RedirectResponse("/?error=1#waitlist", status_code=303)
+    db.add_waitlist(email)
+    return RedirectResponse("/?joined=1#waitlist", status_code=303)
 
 
 @app.post("/albums")

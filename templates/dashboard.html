@@ -33,4 +33,16 @@
 {% else %}
 <p class="muted">No albums yet — create your first one above.</p>
 {% endif %}
+
+<div class="card">
+  <h3>Waitlist ({{ waitlist_count }})</h3>
+  <p class="muted small">Emails captured from the public “Create your own photobook” page.</p>
+  {% if waitlist %}
+  <ul class="waitlist-list">
+    {% for w in waitlist %}<li>{{ w.email }}</li>{% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted small">No sign-ups yet.</p>
+  {% endif %}
+</div>
 {% endblock %}

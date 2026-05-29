@@ -109,3 +109,18 @@ input:focus { outline: 2px solid #a78bfa55; border-color: #a78bfa; }
 
 .danger-zone { border-color: #3a1d22; }
 .flash { background: #14241a; border: 1px solid #1f5132; color: #a7f3d0; padding: 12px 16px; border-radius: 10px; margin: 16px 0; }
+
+/* Public landing / waitlist */
+.landing { max-width: 620px; margin: 40px auto; text-align: center; }
+.landing-emoji { font-size: 3.4rem; line-height: 1; }
+.landing h1 { font-size: 2.3rem; margin: .3em 0; background: linear-gradient(135deg, #a78bfa, #f0abfc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.landing .lead { font-size: 1.15rem; color: #c8c8d0; }
+.landing-points { list-style: none; padding: 0; margin: 22px 0 30px; display: inline-block; text-align: left; color: #c8c8d0; }
+.landing-points li { margin: 8px 0; }
+.waitlist-card { text-align: left; }
+.waitlist-form { display: flex; gap: 10px; margin-top: 10px; }
+.waitlist-form input { flex: 1; }
+.ok { color: #a7f3d0; font-size: 1.05rem; }
+.waitlist-list { margin: 8px 0 0; padding-left: 18px; color: #c8c8d0; }
+.waitlist-list li { margin: 3px 0; font-family: ui-monospace, monospace; font-size: .9rem; }
+@media (max-width: 520px) { .waitlist-form { flex-direction: column; } }

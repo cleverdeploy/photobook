@@ -48,6 +48,11 @@ def init_db() -> None:
             created_at    REAL NOT NULL
         );
         CREATE INDEX IF NOT EXISTS idx_photos_album ON photos(album_id, created_at);
+        CREATE TABLE IF NOT EXISTS waitlist (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            email       TEXT NOT NULL UNIQUE,
+            created_at  REAL NOT NULL
+        );
         """
     )
     conn.commit()
@@ -148,6 +153,30 @@ def delete_photo(photo_id: str) -> None:
     conn = _conn()
     conn.execute("DELETE FROM photos WHERE id=?", (photo_id,))
     conn.commit()
+
+
+# --- Waitlist -------------------------------------------------------------
+
+def add_waitlist(email: str) -> bool:
+    """Store a waitlist email. Returns False if it was already present."""
+    conn = _conn()
+    cur = conn.execute(
+        "INSERT OR IGNORE INTO waitlist (email, created_at) VALUES (?,?)",
+        (email, time.time()),
+    )
+    conn.commit()
+    return cur.rowcount > 0
+
+
+def list_waitlist() -> list[sqlite3.Row]:
+    return _conn().execute(
+        "SELECT * FROM waitlist ORDER BY created_at DESC"
+    ).fetchall()
+
+
+def count_waitlist() -> int:
+    row = _conn().execute("SELECT COUNT(*) AS n FROM waitlist").fetchone()
+    return int(row["n"]) if row else 0
 
 
 def album_theme(album: sqlite3.Row) -> dict[str, Any]:

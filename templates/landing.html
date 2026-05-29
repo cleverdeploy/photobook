@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Photobook — your own AI-themed shared albums{% endblock %}
+{% block content %}
+<div class="landing">
+  <div class="landing-hero">
+    <div class="landing-emoji">📸</div>
+    <h1>Create your own photobook</h1>
+    <p class="lead">Beautiful, AI-themed shared albums. Drop in your photos, get a
+      link, and everyone can add theirs — no app to install, no logins to hand out.</p>
+    <ul class="landing-points">
+      <li>🎨 Each album gets its own look, themed from its title</li>
+      <li>🔗 One link to share on WhatsApp</li>
+      <li>📥 Friends &amp; family add their own photos instantly</li>
+    </ul>
+  </div>
+
+  <div id="waitlist" class="card waitlist-card">
+    <h2>Join the waitlist</h2>
+    {% if joined %}
+      <p class="ok">🎉 You're on the list! We'll be in touch when sign-ups open.</p>
+    {% else %}
+      <p class="muted">Be the first to know when sign-ups open.</p>
+      {% if error %}<p class="error">Please enter a valid email address.</p>{% endif %}
+      <form method="post" action="/waitlist" class="waitlist-form">
+        <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <button class="btn primary" type="submit">Join the Waitlist</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
