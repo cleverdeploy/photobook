@@ -46,3 +46,7 @@ serves it on port 8080 behind Traefik + Let's Encrypt. DNS for
 See `deploy.py` for the idempotent Playwright deploy script. Required env vars
 in Dokploy: `OWNER_PASSWORD`, `SECRET_KEY`, `BASE_URL=https://photobook.wasim.dev`,
 `ANTHROPIC_API_KEY`.
+
+**Auto-deploy on push:** a GitHub push webhook on this repo calls Dokploy's
+per-app deploy URL, so commits to `main` rebuild and rolling-update the
+container automatically — no manual `deploy.py` run needed.
