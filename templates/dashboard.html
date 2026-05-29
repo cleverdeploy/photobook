@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Your albums · Photobook{% endblock %}
+{% block content %}
+<div class="row spread">
+  <h1>Your albums</h1>
+</div>
+
+<form method="post" action="/albums" class="card create-row">
+  <input type="text" name="title" placeholder="New album title (e.g. “Mum's gardening”)" required>
+  <button class="btn primary" type="submit">Create album</button>
+</form>
+<p class="muted small">A theme is generated from the title automatically — gardening, beach, birthday, you name it.</p>
+
+{% if albums %}
+<div class="album-grid">
+  {% for a in albums %}
+  {% set t = a.theme %}
+  <a class="album-card" href="/album/{{ a.album.id }}"
+     style="--c-bg:{{ t.bg }};--c-accent:{{ t.accent }};--c-accent2:{{ t.accent2 }};--c-text:{{ t.text }}">
+    <div class="album-card-banner">
+      {% if a.album.cover_id %}
+      <img src="/media/{{ a.album.id }}/thumb/{{ a.album.cover_id }}.jpg" alt="" loading="lazy">
+      {% endif %}
+      <span class="motif-row">{% for m in t.motifs %}{{ m }}{% endfor %}</span>
+    </div>
+    <div class="album-card-body">
+      <h3>{{ a.album.title }}</h3>
+      <p class="muted small">{{ a.count }} photo{{ '' if a.count == 1 else 's' }}</p>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="muted">No albums yet — create your first one above.</p>
+{% endif %}
+{% endblock %}

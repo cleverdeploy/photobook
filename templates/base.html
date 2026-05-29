@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Photobook{% endblock %}</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="admin">
+  <header class="topbar">
+    <a href="/" class="brand">📸 Photobook</a>
+    {% if request.session.get('owner') %}
+    <form method="post" action="/logout" class="inline">
+      <button class="btn ghost" type="submit">Log out</button>
+    </form>
+    {% endif %}
+  </header>
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/
+.env
+.env.prod
+deploy.py
+deploy-screenshots/
+seed_*.py
+*.db
+*.db-wal
+*.db-shm
+.DS_Store

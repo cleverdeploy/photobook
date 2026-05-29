@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ album.title }} · Photobook{% endblock %}
+{% block content %}
+<div class="row spread wrap-row">
+  <div>
+    <a href="/" class="muted small">← All albums</a>
+    <h1>{{ album.title }}</h1>
+  </div>
+  <span class="motif-row big">{% for m in theme.motifs %}{{ m }}{% endfor %}</span>
+</div>
+
+<div class="card">
+  <h3>Share link</h3>
+  <p class="muted small">Paste this into WhatsApp. Anyone with the link can view and add photos — no login needed.</p>
+  <div class="share-row">
+    <input type="text" id="shareUrl" value="{{ share_url }}" readonly>
+    <button class="btn primary" type="button" onclick="copyShare()">Copy</button>
+    <a class="btn ghost" href="{{ share_url }}" target="_blank" rel="noopener">Open</a>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Add photos</h3>
+  <form method="post" action="/album/{{ album.id }}/upload" enctype="multipart/form-data"
+        class="dropzone" data-dropzone>
+    <input type="file" name="files" id="ownerFiles" multiple
+           accept="image/*,.heic,.heif,.zip" hidden>
+    <p class="dz-text">Drag photos or a .zip here, or <button type="button" class="linkbtn" onclick="document.getElementById('ownerFiles').click()">browse</button></p>
+    <p class="muted small dz-count" data-count></p>
+    <button class="btn primary" type="submit">Upload</button>
+  </form>
+</div>
+
+<div class="card">
+  <div class="row spread">
+    <h3>Theme</h3>
+    <form method="post" action="/album/{{ album.id }}/retheme" class="inline">
+      <button class="btn ghost" type="submit">↻ Regenerate</button>
+    </form>
+  </div>
+  <p class="muted small">{{ theme.description }}</p>
+  <div class="swatches">
+    {% for c in [theme.bg, theme.surface, theme.accent, theme.accent2, theme.text] %}
+    <span class="swatch" style="background:{{ c }}" title="{{ c }}"></span>
+    {% endfor %}
+    <span class="muted small">{{ theme.heading_font }} / {{ theme.body_font }}</span>
+  </div>
+  <form method="post" action="/album/{{ album.id }}/title" class="row gap" style="margin-top:14px">
+    <input type="text" name="title" value="{{ album.title }}">
+    <button class="btn ghost" type="submit">Rename</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Photos ({{ photos|length }})</h3>
+  {% if photos %}
+  <div class="photo-grid">
+    {% for p in photos %}
+    <figure class="photo-tile">
+      <img src="/media/{{ album.id }}/thumb/{{ p.id }}.jpg" alt="" loading="lazy">
+      {% if album.cover_id == p.id %}<span class="badge">cover</span>{% endif %}
+      {% if p.contributor %}<figcaption class="by">{{ p.contributor }}</figcaption>{% endif %}
+      <div class="tile-actions">
+        <form method="post" action="/album/{{ album.id }}/cover" class="inline">
+          <input type="hidden" name="photo_id" value="{{ p.id }}">
+          <button class="mini" type="submit" title="Set as cover">★</button>
+        </form>
+        <form method="post" action="/photo/{{ p.id }}/delete" class="inline"
+              onsubmit="return confirm('Delete this photo?')">
+          <input type="hidden" name="album_id" value="{{ album.id }}">
+          <button class="mini danger" type="submit" title="Delete">✕</button>
+        </form>
+      </div>
+    </figure>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted">No photos yet.</p>
+  {% endif %}
+</div>
+
+<div class="card danger-zone">
+  <form method="post" action="/album/{{ album.id }}/delete"
+        onsubmit="return confirm('Delete this album and all its photos? This cannot be undone.')">
+    <button class="btn danger" type="submit">Delete album</button>
+  </form>
+</div>
+
+<script src="/static/app.js"></script>
+{% endblock %}

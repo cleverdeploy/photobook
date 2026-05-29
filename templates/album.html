@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ album.title }}</title>
+  <meta name="robots" content="noindex">
+
+  <!-- Open Graph / WhatsApp link preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ album.title }}">
+  <meta property="og:description" content="{{ theme.description }} · Tap to view and add your photos.">
+  <meta property="og:url" content="{{ page_url }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <meta name="twitter:card" content="{{ 'summary_large_image' if og_image else 'summary' }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family={{ theme.heading_font.replace(' ', '+') }}:wght@400;700&family={{ theme.body_font.replace(' ', '+') }}:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/album.css">
+  <style>
+    :root {
+      --bg: {{ theme.bg }};
+      --surface: {{ theme.surface }};
+      --accent: {{ theme.accent }};
+      --accent2: {{ theme.accent2 }};
+      --text: {{ theme.text }};
+      --heading-font: "{{ theme.heading_font }}", Georgia, serif;
+      --body-font: "{{ theme.body_font }}", system-ui, sans-serif;
+    }
+  </style>
+</head>
+<body class="theme pattern-{{ theme.pattern }}">
+  <header class="hero">
+    <div class="motif-field" aria-hidden="true">
+      {% for i in range(18) %}<span class="motif">{{ theme.motifs[i % theme.motifs|length] }}</span>{% endfor %}
+    </div>
+    <div class="hero-inner">
+      <div class="hero-emoji">{{ theme.motifs[0] }}</div>
+      <h1>{{ album.title }}</h1>
+      <p class="tagline">{{ theme.description }}</p>
+      <a href="#contribute" class="btn add-cta">＋ Add your photos</a>
+    </div>
+  </header>
+
+  <main>
+    {% if request.query_params.get('added') %}
+      {% set n = request.query_params.get('added')|int %}
+      <div class="flash">
+        {% if n > 0 %}🎉 Added {{ n }} photo{{ '' if n == 1 else 's' }}. Thank you!{% else %}No photos were added — make sure they're images or a .zip.{% endif %}
+      </div>
+    {% endif %}
+
+    <section id="gallery" class="gallery-section">
+      {% if photos %}
+      <div class="gallery">
+        {% for p in photos %}
+        <a class="g-item" href="/media/{{ album.id }}/disp/{{ p.id }}.jpg"
+           data-full="/media/{{ album.id }}/disp/{{ p.id }}.jpg"
+           data-orig="/media/{{ album.id }}/orig/{{ p.id }}"
+           data-by="{{ p.contributor or '' }}">
+          <img src="/media/{{ album.id }}/thumb/{{ p.id }}.jpg" alt="" loading="lazy">
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty">No photos yet — be the first to add some! 👇</p>
+      {% endif %}
+    </section>
+
+    <section id="contribute" class="contribute-section">
+      <h2>Add your photos</h2>
+      <p class="muted">No account needed. Pick photos from your phone or computer, or drop a .zip.</p>
+      <form method="post" action="/a/{{ token }}/contribute" enctype="multipart/form-data" class="contribute-form" data-dropzone>
+        <input type="text" name="name" maxlength="60" placeholder="Your name (optional)">
+        <input type="file" name="files" id="contribFiles" multiple accept="image/*,.heic,.heif,.zip" hidden>
+        <div class="dropzone">
+          <p class="dz-text">Drag photos or a .zip here, or <button type="button" class="linkbtn" onclick="document.getElementById('contribFiles').click()">browse</button></p>
+          <p class="muted small dz-count" data-count></p>
+        </div>
+        <button class="btn add-cta" type="submit">Upload</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    {% if owner %}<a href="/album/{{ album.id }}">Manage this album →</a> · {% endif %}
+    made with 📸 Photobook
+  </footer>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+    <img id="lbImg" src="" alt="">
+    <a id="lbDownload" class="lb-download" href="" download>Download original</a>
+  </div>
+
+  <script src="/static/album.js"></script>
+</body>
+</html>
