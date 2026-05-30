@@ -184,7 +184,7 @@ def update_album_description(
     album = db.get_album(album_id)
     if album is not None:
         th = db.album_theme(album)
-        th["description"] = description.strip()[:200]
+        th["description"] = description.strip()[:120]  # match theme._sanitise cap
         db.update_album_theme(album_id, th)
     return RedirectResponse(f"/album/{album_id}", status_code=303)
 

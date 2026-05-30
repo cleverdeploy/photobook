@@ -40,7 +40,7 @@
   </div>
   <form method="post" action="/album/{{ album.id }}/description" class="theme-desc-form">
     <label class="muted small" for="themeDesc">Caption shown on the album page</label>
-    <textarea id="themeDesc" name="description" rows="2" maxlength="200">{{ theme.description }}</textarea>
+    <textarea id="themeDesc" name="description" rows="2" maxlength="120">{{ theme.description }}</textarea>
     <button class="btn ghost" type="submit">Save caption</button>
   </form>
   <div class="swatches">
