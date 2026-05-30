@@ -35,11 +35,14 @@ h3 { margin: 0 0 .4em; }
 .inline { display: inline; }
 .stack { display: flex; flex-direction: column; gap: 12px; }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], textarea {
   background: #0f0f15; border: 1px solid #2c2c38; color: #e8e8ea;
   border-radius: 10px; padding: 11px 13px; font-size: 15px; width: 100%;
 }
-input:focus { outline: 2px solid #a78bfa55; border-color: #a78bfa; }
+textarea { font-family: inherit; line-height: 1.45; resize: vertical; }
+input:focus, textarea:focus { outline: 2px solid #a78bfa55; border-color: #a78bfa; }
+.theme-desc-form { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.theme-desc-form button { align-self: flex-start; }
 
 .btn {
   display: inline-block; border: 1px solid #2c2c38; background: #1d1d27;
