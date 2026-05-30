@@ -38,7 +38,11 @@
       <button class="btn ghost" type="submit">↻ Regenerate</button>
     </form>
   </div>
-  <p class="muted small">{{ theme.description }}</p>
+  <form method="post" action="/album/{{ album.id }}/description" class="theme-desc-form">
+    <label class="muted small" for="themeDesc">Caption shown on the album page</label>
+    <textarea id="themeDesc" name="description" rows="2" maxlength="200">{{ theme.description }}</textarea>
+    <button class="btn ghost" type="submit">Save caption</button>
+  </form>
   <div class="swatches">
     {% for c in [theme.bg, theme.surface, theme.accent, theme.accent2, theme.text] %}
     <span class="swatch" style="background:{{ c }}" title="{{ c }}"></span>

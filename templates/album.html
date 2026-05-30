@@ -90,9 +90,13 @@
 
   <div class="lightbox" id="lightbox" hidden>
     <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">‹</button>
-    <img id="lbImg" src="" alt="">
-    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">›</button>
+    <div class="lb-stage" id="lbStage">
+      <div class="lb-track" id="lbTrack">
+        <div class="lb-slide"><img alt=""></div>
+        <div class="lb-slide"><img id="lbImg" alt=""></div>
+        <div class="lb-slide"><img alt=""></div>
+      </div>
+    </div>
     <a id="lbDownload" class="lb-download" href="" download>Download original</a>
   </div>
 

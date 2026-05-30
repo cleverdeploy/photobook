@@ -175,6 +175,20 @@ def rename_album(request: Request, album_id: str, title: str = Form(...)):
     return RedirectResponse(f"/album/{album_id}", status_code=303)
 
 
+@app.post("/album/{album_id}/description")
+def update_album_description(
+    request: Request, album_id: str, description: str = Form(default="")
+):
+    if not is_owner(request):
+        return RedirectResponse("/login", status_code=303)
+    album = db.get_album(album_id)
+    if album is not None:
+        th = db.album_theme(album)
+        th["description"] = description.strip()[:200]
+        db.update_album_theme(album_id, th)
+    return RedirectResponse(f"/album/{album_id}", status_code=303)
+
+
 @app.post("/album/{album_id}/retheme")
 def retheme_album(request: Request, album_id: str):
     if not is_owner(request):

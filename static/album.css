@@ -107,27 +107,24 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 18px 60px; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
 }
 .lightbox[hidden] { display: none; }
-.lightbox img { max-width: 92vw; max-height: 80vh; border-radius: 8px; }
+/* Swipeable stage: a 3-slide track (prev / current / next) is translated. */
+.lb-stage {
+  width: 100vw; height: 80vh; overflow: hidden; position: relative;
+  touch-action: pan-y;
+}
+.lb-track { display: flex; height: 100%; will-change: transform; }
+.lb-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; }
+.lb-slide img {
+  max-width: 92vw; max-height: 80vh; border-radius: 8px;
+  user-select: none; -webkit-user-drag: none;
+}
 .lb-close {
   position: absolute; top: 16px; right: 20px; background: none; border: none;
-  color: #fff; font-size: 2rem; cursor: pointer; line-height: 1;
+  color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; z-index: 2;
 }
 .lb-download { color: #fff; text-decoration: underline; font-size: .95rem; }
-.lb-nav {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,.4); border: none; color: #fff;
-  font-size: 2.6rem; line-height: 1; cursor: pointer;
-  padding: 6px 16px; border-radius: 12px; user-select: none;
-  transition: background .15s;
-}
-.lb-nav:hover { background: rgba(255,255,255,.18); }
-.lb-prev { left: 14px; }
-.lb-next { right: 14px; }
 
 @media (max-width: 640px) {
   .gallery { columns: 2 140px; }
   .hero { padding: 44px 16px 38px; }
-  .lb-nav { font-size: 2rem; padding: 4px 11px; }
-  .lb-prev { left: 6px; }
-  .lb-next { right: 6px; }
 }
