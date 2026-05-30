@@ -28,6 +28,20 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
+@app.middleware("http")
+async def revalidate_cache(request: Request, call_next):
+    """Force browsers to revalidate before reusing a cached copy.
+
+    The app ships no other cache headers, so mobile browsers were heuristically
+    caching pages *and* /static assets (e.g. album.js) and serving them stale
+    after a deploy. `no-cache` means "store, but check with the server first":
+    StaticFiles already sends an ETag, so revalidation is a cheap 304.
+    """
+    response = await call_next(request)
+    response.headers.setdefault("Cache-Control", "no-cache")
+    return response
+
+
 @app.on_event("startup")
 def _startup() -> None:
     config.ensure_dirs()
